@@ -16,7 +16,7 @@ const projects = [
     description: "Architected a scalable serverless backend (Node.js, AWS Lambda) handling 500+ concurrent users with sub-200ms response times. Built a complete buying workflow (checkout, payment details, confirmation) and optimized UI, reducing cart abandonment by 25%.",
     image: "/projects/project2.png",
     tags: ["React.js", "Node.js", "AWS Lambda", "DynamoDB", "API Gateway"],
-    demoUrl: "#",
+    demoUrl: "https://jear-ecommerce-cse-5234.vercel.app/",
     githubUrl: "https://github.com/anshpachauri23/Portfolio",
   },
   {
