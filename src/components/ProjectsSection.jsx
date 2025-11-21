@@ -1,4 +1,5 @@
-import { ArrowRight, ExternalLink, Github } from "lucide-react";
+import { useState, useEffect } from "react";
+import { ArrowRight, ExternalLink, Github, X } from "lucide-react";
 
 const projects = [
   {
@@ -49,6 +50,35 @@ const projects = [
 ];
 
 export const ProjectsSection = () => {
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  // Close modal on ESC key press
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === "Escape") {
+        setSelectedImage(null);
+      }
+    };
+
+    if (selectedImage) {
+      document.addEventListener("keydown", handleEscape);
+      document.body.style.overflow = "hidden"; // Prevent background scrolling
+    }
+
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+      document.body.style.overflow = "unset";
+    };
+  }, [selectedImage]);
+
+  const openModal = (imageSrc, imageAlt) => {
+    setSelectedImage({ src: imageSrc, alt: imageAlt });
+  };
+
+  const closeModal = () => {
+    setSelectedImage(null);
+  };
+
   return (
     <section id="projects" className="py-24 px-4 relative">
       <div className="container mx-auto max-w-5xl">
@@ -69,10 +99,11 @@ export const ProjectsSection = () => {
               className="group bg-card rounded-lg overflow-hidden shadow-xs card-hover"
             >
               {project.image && (
-                <div className="h-48 overflow-hidden">
+                <div className="h-48 overflow-hidden cursor-pointer">
                   <img
                     src={project.image}
                     alt={project.title}
+                    onClick={() => openModal(project.image, project.title)}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   />
                 </div>
@@ -124,6 +155,30 @@ export const ProjectsSection = () => {
           </a>
         </div>
       </div>
+
+      {/* Image Modal/Lightbox */}
+      {selectedImage && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm animate-fade-in"
+          onClick={closeModal}
+        >
+          <div className="relative max-w-7xl max-h-[90vh] w-full h-full flex items-center justify-center p-4">
+            <button
+              onClick={closeModal}
+              className="absolute top-4 right-4 z-10 p-2 rounded-full bg-black/50 hover:bg-black/70 text-white transition-colors duration-200"
+              aria-label="Close modal"
+            >
+              <X size={24} />
+            </button>
+            <img
+              src={selectedImage.src}
+              alt={selectedImage.alt}
+              className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            />
+          </div>
+        </div>
+      )}
     </section>
   );
 };
