@@ -4,8 +4,8 @@ import { ArrowRight, ExternalLink, Github, X } from "lucide-react";
 const projects = [
   {
     id: 1,
-    title: "RecipeShare - Social Recipe Network",
-    description: "Built a full-stack social media platform for recipe sharing with 15+ features including authentication, follow system, real-time notifications, commenting, liking, and comprehensive profile management. Engineered scalable backend REST APIs using Go and PostgreSQL, implemented JWT authentication, integrated AWS S3 for media storage, and designed responsive UI with Next.js and Tailwind CSS supporting 100+ concurrent users with optimized database query performance.",
+    title: "RecipeShare — Social Recipe Network",
+    description: "Full-stack social media platform for recipe sharing with 15+ features: authentication, follow system, real-time notifications, commenting, and liking. Built with Go + PostgreSQL backend, JWT auth, AWS S3 for media, and Next.js frontend supporting 100+ concurrent users.",
     image: "/projects/project1.png",
     tags: ["Next.js", "TypeScript", "Go", "PostgreSQL", "AWS S3", "AWS RDS", "Tailwind CSS"],
     demoUrl: "https://recipe-social-media-personal.vercel.app/auth/login",
@@ -14,7 +14,7 @@ const projects = [
   {
     id: 2,
     title: "E-commerce Platform",
-    description: "Architected a scalable serverless backend (Node.js, AWS Lambda) handling 500+ concurrent users with sub-200ms response times. Built a complete buying workflow (checkout, payment details, confirmation) and optimized UI, reducing cart abandonment by 25%.",
+    description: "Scalable serverless backend (Node.js, AWS Lambda) handling 500+ concurrent users with sub-200ms response times. Complete buying workflow: checkout, payment, confirmation — reduced cart abandonment by 25%.",
     image: "/projects/project2.png",
     tags: ["React.js", "Node.js", "AWS Lambda", "DynamoDB", "API Gateway"],
     demoUrl: "https://jear-ecommerce-cse-5234.vercel.app/",
@@ -22,17 +22,17 @@ const projects = [
   },
   {
     id: 3,
-    title: "Real-Time Market Sentiment Analysis Engine",
-    description: "Engineered a distributed streaming architecture to ingest high-velocity financial news feeds using Apache Kafka and Docker containerization; built a sentiment analysis worker using Vector Search (RAG) and FAISS to correlate live news events with historical market context, delivering sub-second bullish/bearish trend indicators to a React dashboard for immediate decision support.",
+    title: "Real-Time Market Sentiment Engine",
+    description: "Distributed streaming architecture ingesting financial news via Apache Kafka and Docker. Sentiment analysis with Vector Search (RAG) and FAISS correlates live events with historical market context, delivering sub-second trend indicators to a React dashboard.",
     image: "/projects/project4.png",
-    tags: ["Python", "Docker", "Kafka", "FAISS", "React", "RAG", "Vector Search"],
+    tags: ["Python", "Docker", "Kafka", "FAISS", "React", "RAG"],
     demoUrl: "#",
     githubUrl: "https://github.com/anshpachauri23/Portfolio",
   },
   {
     id: 4,
     title: "Core Language Interpreter",
-    description: "Designed and implemented a production-grade interpreter with lexical analysis, parsing, and recursive-descent execution processing 1,000+ lines/sec; incorporated robust reference-counting garbage collection and syntax checks ensuring 99.9% parsing accuracy for reliable execution.",
+    description: "Production-grade interpreter with lexical analysis, parsing, and recursive-descent execution processing 1,000+ lines/sec. Includes robust reference-counting garbage collection with 99.9% parsing accuracy.",
     image: null,
     tags: ["Java", "Compiler Design", "Memory Management", "Garbage Collection"],
     demoUrl: "#",
@@ -40,11 +40,20 @@ const projects = [
   },
   {
     id: 5,
-    title: "PeerEval - Academic Assessment Platform",
-    description: "Developed a full-stack CRUD platform for 200+ students, reducing submission errors by 35%, improving SQL query speeds by 2s/request, and communicating technical progress and performance in presentations to peers and instructors throughout the development cycle.",
+    title: "PeerEval — Academic Assessment Platform",
+    description: "Full-stack CRUD platform for 200+ students — reduced submission errors by 35%, improved SQL query speeds by 2s/request, and delivered technical progress presentations throughout the development cycle.",
     image: "/projects/project3.png",
-    tags: ["Ruby on Rails 7.2", "SQLite3", "Bootstrap 5", "Full-Stack"],
+    tags: ["Ruby on Rails 7.2", "SQLite3", "Bootstrap 5"],
     demoUrl: "#",
+    githubUrl: "https://github.com/anshpachauri23/Portfolio",
+  },
+  {
+    id: 6,
+    title: "Buckeye Meal Planner",
+    description: "Full-stack meal planning web app for Ohio State students with dining hall menu integration, weekly plan builder, and nutritional tracking. Supports 500+ concurrent users with optimized query performance.",
+    image: "/projects/project5.png",
+    tags: ["Full-Stack", "React", "Node.js", "PostgreSQL", "AWS"],
+    demoUrl: "https://buckeyemealplanner.com/",
     githubUrl: "https://github.com/anshpachauri23/Portfolio",
   },
 ];
@@ -52,93 +61,99 @@ const projects = [
 export const ProjectsSection = () => {
   const [selectedImage, setSelectedImage] = useState(null);
 
-  // Close modal on ESC key press
   useEffect(() => {
-    const handleEscape = (e) => {
-      if (e.key === "Escape") {
-        setSelectedImage(null);
-      }
-    };
-
+    const handleEscape = (e) => { if (e.key === "Escape") setSelectedImage(null); };
     if (selectedImage) {
       document.addEventListener("keydown", handleEscape);
-      document.body.style.overflow = "hidden"; // Prevent background scrolling
+      document.body.style.overflow = "hidden";
     }
-
     return () => {
       document.removeEventListener("keydown", handleEscape);
       document.body.style.overflow = "unset";
     };
   }, [selectedImage]);
 
-  const openModal = (imageSrc, imageAlt) => {
-    setSelectedImage({ src: imageSrc, alt: imageAlt });
-  };
-
-  const closeModal = () => {
-    setSelectedImage(null);
-  };
-
   return (
-    <section id="projects" className="py-24 px-4 relative">
+    <section id="projects" className="py-28 px-4 relative border-t border-border" style={{ background: 'hsl(var(--secondary) / 0.3)' }}>
       <div className="container mx-auto max-w-5xl">
-        <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">
-          {" "}
-          Featured <span className="text-primary"> Projects </span>
-        </h2>
+        <div className="flex items-baseline gap-4 mb-4 justify-center">
+          <span style={{ fontFamily: "'VT323', monospace", fontSize: '1rem', letterSpacing: '2px', color: 'hsl(var(--muted-foreground))', textTransform: 'uppercase' }}>
+            04 —
+          </span>
+          <h2 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 500, letterSpacing: '-1px', lineHeight: 1 }}>
+            Projects
+          </h2>
+        </div>
 
-        <p className="text-center text-muted-foreground mb-12 max-w-2xl mx-auto">
-          Here are some of my recent projects. Each project was carefully
-          crafted with attention to detail, performance, and user experience.
+        <p className="text-center text-muted-foreground mb-12 max-w-xl mx-auto" style={{ fontSize: '1.05rem' }}>
+          A selection of recent work — each built with care for performance and user experience.
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map((project, key) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {projects.map((project) => (
             <div
-              key={key}
-              className="group bg-card rounded-lg overflow-hidden shadow-xs card-hover"
+              key={project.id}
+              className="retro-project-card text-left flex flex-col"
+              style={{ borderRadius: '6px', overflow: 'hidden', background: 'hsl(var(--card))' }}
             >
               {project.image && (
-                <div className="h-48 overflow-hidden cursor-pointer">
+                <div
+                  className="h-44 overflow-hidden cursor-pointer"
+                  onClick={() => setSelectedImage({ src: project.image, alt: project.title })}
+                >
                   <img
                     src={project.image}
                     alt={project.title}
-                    onClick={() => openModal(project.image, project.title)}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                   />
                 </div>
               )}
 
-              <div className="p-6">
-                <h3 className="text-xl font-semibold mb-1"> {project.title}</h3>
-                <p className="text-muted-foreground text-sm mb-4">
+              <div className="p-5 flex flex-col flex-1">
+                <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '0.5rem', lineHeight: 1.3 }}>
+                  {project.title}
+                </h3>
+                <p className="text-muted-foreground mb-4 flex-1" style={{ fontSize: '0.95rem', lineHeight: 1.55 }}>
                   {project.description}
                 </p>
-                
-                <div className="flex flex-wrap gap-2 mb-4">
+
+                <div className="flex flex-wrap gap-1.5 mb-4">
                   {project.tags.map((tag) => (
-                    <span className="px-2 py-1 text-xs font-medium border rounded-full bg-secondary text-secondary-foreground">
+                    <span
+                      key={tag}
+                      style={{
+                        fontFamily: "'VT323', monospace",
+                        fontSize: '0.9rem',
+                        padding: '1px 7px',
+                        border: '1px solid hsl(var(--border))',
+                        background: 'hsl(var(--background))',
+                        lineHeight: 1.6,
+                      }}
+                    >
                       {tag}
                     </span>
                   ))}
                 </div>
-                <div className="flex justify-between items-center">
-                  <div className="flex space-x-3">
+
+                <div className="flex gap-3">
+                  {project.demoUrl !== "#" && (
                     <a
                       href={project.demoUrl}
                       target="_blank"
-                      className="text-foreground/80 hover:text-primary transition-colors duration-300"
+                      rel="noreferrer"
+                      className="text-muted-foreground hover:text-foreground transition-colors"
                     >
-                      <ExternalLink size={20} />
+                      <ExternalLink size={18} />
                     </a>
-                    <a
-                      href={project.githubUrl}
-                      target="_blank"
-                      className="text-foreground/80 hover:text-primary transition-colors duration-300"
-                    >
-                      <Github size={20} />
-                    </a>
-                  </div>
+                  )}
+                  <a
+                    href={project.githubUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    <Github size={18} />
+                  </a>
                 </div>
               </div>
             </div>
@@ -147,36 +162,34 @@ export const ProjectsSection = () => {
 
         <div className="text-center mt-12">
           <a
-            className="cosmic-button w-fit flex items-center mx-auto gap-2"
-            target="_blank"
             href="https://github.com/anshpachauri23/Portfolio"
+            target="_blank"
+            rel="noreferrer"
+            className="cosmic-button inline-flex items-center gap-2"
           >
-            Check My Github <ArrowRight size={16} />
+            View all on GitHub <ArrowRight size={16} />
           </a>
         </div>
       </div>
 
-      {/* Image Modal/Lightbox */}
+      {/* Lightbox */}
       {selectedImage && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm animate-fade-in"
-          onClick={closeModal}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90"
+          onClick={() => setSelectedImage(null)}
         >
-          <div className="relative max-w-7xl max-h-[90vh] w-full h-full flex items-center justify-center p-4">
-            <button
-              onClick={closeModal}
-              className="absolute top-4 right-4 z-10 p-2 rounded-full bg-black/50 hover:bg-black/70 text-white transition-colors duration-200"
-              aria-label="Close modal"
-            >
-              <X size={24} />
-            </button>
-            <img
-              src={selectedImage.src}
-              alt={selectedImage.alt}
-              className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
-              onClick={(e) => e.stopPropagation()}
-            />
-          </div>
+          <button
+            onClick={() => setSelectedImage(null)}
+            className="absolute top-4 right-4 z-10 p-2 text-white/70 hover:text-white transition-colors"
+          >
+            <X size={24} />
+          </button>
+          <img
+            src={selectedImage.src}
+            alt={selectedImage.alt}
+            className="max-w-full max-h-[90vh] object-contain rounded"
+            onClick={(e) => e.stopPropagation()}
+          />
         </div>
       )}
     </section>

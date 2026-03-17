@@ -1,0 +1,822 @@
+/* ══════════════════════════════════════════════════════════════
+   FullScreenComputer — fills the entire viewport
+   ══════════════════════════════════════════════════════════════ */
+
+.fsc-root {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: #f4f1e6;
+  overflow: hidden;
+  font-family: 'EB Garamond', serif;
+}
+
+/* ── Computer outer body ─────────────────────────────────────── */
+.fsc-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 14px 22px 0;
+  min-height: 0;
+  position: relative;
+  z-index: 2; /* sits above desk cables */
+}
+
+/* Side cables — run alongside the monitor, connecting to desk cables */
+.fsc-side-cable {
+  position: absolute;
+  top: 40px;
+  bottom: -12px;
+  width: 7px;
+  border-radius: 4px;
+  pointer-events: none;
+  z-index: 0;
+}
+.fsc-side-cable-left  { left: 4px;  background: linear-gradient(to bottom, transparent 0%, #8a7f6f 18%, #9a9080 80%, #8a7f6f 100%); }
+.fsc-side-cable-right { right: 4px; background: linear-gradient(to bottom, transparent 0%, #8a7f6f 18%, #9a9080 80%, #8a7f6f 100%); }
+
+.fsc-bezel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: linear-gradient(155deg, #F2EFE2 0%, #E4E0D4 55%, #D6D2C6 100%);
+  border-radius: 18px 18px 6px 6px;
+  padding: 18px 18px 13px;
+  box-shadow:
+    inset 3px 3px 10px rgba(255,255,255,0.72),
+    inset -4px -4px 14px rgba(0,0,0,0.12),
+    0 6px 0 #BCBBB0,
+    0 10px 40px rgba(0,0,0,0.22);
+  min-height: 0;
+}
+
+/* ── Screen inset ────────────────────────────────────────────── */
+.fsc-screen-frame {
+  flex: 1;
+  background: #C4C0B4;
+  border-radius: 11px;
+  padding: 6px;
+  box-shadow:
+    inset 4px 4px 14px rgba(0,0,0,0.28),
+    inset -3px -3px 8px rgba(255,255,255,0.28);
+  min-height: 0;
+  display: flex;
+}
+
+.fsc-crt {
+  flex: 1;
+  background: #191c22;
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: inset 0 0 60px rgba(0,0,0,0.9);
+}
+
+/* Scanlines */
+.fsc-crt::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,0.11) 50%),
+    linear-gradient(90deg, rgba(255,0,0,0.015), rgba(0,255,0,0.01), rgba(0,0,255,0.015));
+  background-size: 100% 3px, 4px 100%;
+  z-index: 20;
+  pointer-events: none;
+  border-radius: 6px;
+}
+
+/* Hide real cursor inside CRT when virtual mouse is active */
+.fsc-crt.mouse-mode { cursor: none; }
+.fsc-crt.mouse-mode * { cursor: none !important; }
+
+/* Virtual on-screen cursor */
+.fsc-virtual-cursor {
+  position: absolute;
+  pointer-events: none;
+  z-index: 50;
+  transform: translate(0, 0);
+  filter: drop-shadow(0 1px 3px rgba(0,0,0,0.6));
+}
+
+/* Vignette */
+.fsc-crt::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.45) 100%);
+  z-index: 18;
+  pointer-events: none;
+  border-radius: 6px;
+}
+
+/* ── Controls bar (below screen, inside bezel) ───────────────── */
+.fsc-controls-bar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 4px;
+  height: 34px;
+  flex-shrink: 0;
+}
+
+.fsc-floppy-slot {
+  width: 110px;
+  height: 10px;
+  background: #2a2a2a;
+  border-radius: 5px;
+  box-shadow: inset 2px 2px 4px rgba(0,0,0,0.55);
+}
+
+.fsc-logo-badge {
+  width: 17px;
+  height: 22px;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  background: linear-gradient(180deg,
+    #63B548 0%,    #63B548 16.6%,
+    #F6C829 16.6%, #F6C829 33.3%,
+    #E57D25 33.3%, #E57D25 50%,
+    #D83335 50%,   #D83335 66.6%,
+    #9C4595 66.6%, #9C4595 83.3%,
+    #468CCF 83.3%, #468CCF 100%
+  );
+  box-shadow: inset 1px 1px 2px rgba(0,0,0,0.2);
+  position: relative;
+  flex-shrink: 0;
+}
+.fsc-logo-badge::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 3px;
+  height: 6px;
+  background: #5a3e28;
+  border-radius: 1px;
+}
+
+.fsc-model-text {
+  font-family: 'VT323', monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: #888;
+}
+
+.fsc-resume-btns {
+  margin-left: auto;
+  display: flex;
+  gap: 7px;
+}
+
+.fsc-resume-btn {
+  font-family: 'VT323', monospace;
+  font-size: 12px;
+  letter-spacing: 0.4px;
+  padding: 2px 10px;
+  border: 1px solid #b8b4a8;
+  border-radius: 3px;
+  background: transparent;
+  color: #777;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.15s;
+  line-height: 1.6;
+}
+.fsc-resume-btn:hover {
+  border-color: #333;
+  color: #333;
+  background: rgba(0,0,0,0.04);
+}
+
+/* ══ OS inside the CRT ═══════════════════════════════════════════ */
+.fsc-os {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  position: relative;
+  z-index: 5;
+}
+
+/* Title bar */
+.fsc-titlebar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 14px;
+  background: rgba(255,255,255,0.045);
+  border-bottom: 1px solid rgba(255,255,255,0.065);
+  flex-shrink: 0;
+}
+.fsc-titlebar-dots { display: flex; gap: 5px; }
+.fsc-dot { width: 9px; height: 9px; border-radius: 50%; }
+.fsc-dot.red   { background: #ff5f57; }
+.fsc-dot.amber { background: #febc2e; }
+.fsc-dot.green { background: #28c840; }
+.fsc-titlebar-title {
+  font-family: 'VT323', monospace;
+  font-size: 12px;
+  color: rgba(255,255,255,0.28);
+  letter-spacing: 1px;
+}
+.fsc-titlebar-right {
+  margin-left: auto;
+  font-family: 'VT323', monospace;
+  font-size: 11px;
+  color: rgba(255,255,255,0.2);
+  letter-spacing: 0.5px;
+}
+
+/* OS body (sidebar + content) */
+.fsc-os-body {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+/* ── Sidebar ─────────────────────────────────────────────────── */
+.fsc-sidebar {
+  width: 175px;
+  flex-shrink: 0;
+  border-right: 1px solid rgba(255,255,255,0.065);
+  padding: 14px 7px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: rgba(0,0,0,0.18);
+}
+
+.fsc-sidebar-label {
+  font-family: 'VT323', monospace;
+  font-size: 9.5px;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.18);
+  padding: 0 10px;
+  margin-bottom: 6px;
+}
+
+.fsc-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 10px;
+  background: transparent;
+  border: none;
+  border-left: 2px solid transparent;
+  cursor: pointer;
+  font-family: 'VT323', monospace;
+  font-size: 16px;
+  color: rgba(255,255,255,0.38);
+  border-radius: 0 3px 3px 0;
+  text-align: left;
+  transition: all 0.14s;
+  width: 100%;
+  line-height: 1;
+}
+.fsc-nav-item:hover {
+  color: rgba(255,255,255,0.72);
+  background: rgba(255,255,255,0.055);
+}
+.fsc-nav-item.active {
+  color: #dce9f2;
+  background: rgba(70,140,207,0.14);
+  border-left-color: #468CCF;
+}
+
+.fsc-nav-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.18);
+  flex-shrink: 0;
+}
+.fsc-nav-item.active .fsc-nav-dot { background: #468CCF; }
+
+.fsc-sidebar-footer {
+  margin-top: auto;
+  padding: 10px 10px 2px;
+  border-top: 1px solid rgba(255,255,255,0.065);
+}
+.fsc-sidebar-name {
+  font-family: 'VT323', monospace;
+  font-size: 13px;
+  color: rgba(255,255,255,0.28);
+  line-height: 1.4;
+}
+
+/* ── Mobile tabs (replaces sidebar on small screens) ─────────── */
+.fsc-mobile-tabs {
+  display: none;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  background: rgba(0,0,0,0.18);
+  flex-shrink: 0;
+}
+.fsc-mobile-tabs-inner {
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.fsc-mobile-tabs-inner::-webkit-scrollbar { display: none; }
+.fsc-mobile-tab {
+  font-family: 'VT323', monospace;
+  font-size: 15px;
+  color: rgba(255,255,255,0.38);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 8px 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.14s;
+}
+.fsc-mobile-tab.active {
+  color: #dce9f2;
+  border-bottom-color: #468CCF;
+}
+
+/* ── Content area ────────────────────────────────────────────── */
+.fsc-content-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 24px 20px;
+  min-height: 0;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.1) transparent;
+}
+.fsc-content-area::-webkit-scrollbar { width: 4px; }
+.fsc-content-area::-webkit-scrollbar-track { background: transparent; }
+.fsc-content-area::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+
+/* ══ Content typography ══════════════════════════════════════════ */
+.fsc-heading {
+  font-family: 'EB Garamond', serif;
+  font-size: clamp(1.7rem, 2.4vw, 2.4rem);
+  font-weight: 500;
+  font-style: italic;
+  color: #e6eff5;
+  margin: 0 0 3px 0;
+  line-height: 1;
+}
+.fsc-sub-heading {
+  font-family: 'VT323', monospace;
+  font-size: 10.5px;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.22);
+  margin-bottom: 16px;
+  display: block;
+}
+.fsc-divider {
+  border: none;
+  border-top: 1px solid rgba(255,255,255,0.07);
+  margin: 14px 0;
+}
+.fsc-body-text {
+  font-family: 'EB Garamond', serif;
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: #9aaebb;
+  margin-bottom: 10px;
+}
+
+/* Stats row */
+.fsc-stats-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 10px 0;
+  border-top: 1px solid rgba(255,255,255,0.07);
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  margin: 12px 0 16px;
+}
+.fsc-stat-label {
+  font-family: 'VT323', monospace;
+  font-size: 9.5px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.22);
+}
+.fsc-stat-value {
+  font-family: 'VT323', monospace;
+  font-size: 22px;
+  color: #c0d4e4;
+  line-height: 1.1;
+}
+
+/* Cards (about feature cards, etc.) */
+.fsc-card {
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 4px;
+  padding: 11px 14px;
+  margin-bottom: 9px;
+  background: rgba(255,255,255,0.028);
+  transition: background 0.2s, border-color 0.2s;
+}
+.fsc-card:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.14); }
+.fsc-card-title {
+  font-family: 'EB Garamond', serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #ccdae4;
+  margin-bottom: 3px;
+}
+.fsc-card-text {
+  font-family: 'EB Garamond', serif;
+  font-size: 0.92rem;
+  color: #7a8e9a;
+  line-height: 1.5;
+}
+
+/* Experience cards */
+.fsc-exp-card {
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 4px;
+  padding: 13px 15px;
+  margin-bottom: 12px;
+  background: rgba(255,255,255,0.025);
+  transition: background 0.2s;
+}
+.fsc-exp-card:hover { background: rgba(255,255,255,0.045); }
+.fsc-exp-company {
+  font-family: 'EB Garamond', serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #ccdae4;
+}
+.fsc-exp-role {
+  font-family: 'EB Garamond', serif;
+  font-size: 0.98rem;
+  font-style: italic;
+  color: #5a9fd4;
+  margin: 2px 0 5px;
+}
+.fsc-exp-meta {
+  font-family: 'VT323', monospace;
+  font-size: 11.5px;
+  color: rgba(255,255,255,0.25);
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+.fsc-exp-desc {
+  font-family: 'EB Garamond', serif;
+  font-size: 0.93rem;
+  color: #7a8e9a;
+  line-height: 1.58;
+  margin-bottom: 8px;
+}
+
+/* Tags */
+.fsc-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+.fsc-tag {
+  font-family: 'VT323', monospace;
+  font-size: 12.5px;
+  padding: 0 7px;
+  border: 1px solid rgba(255,255,255,0.13);
+  border-radius: 2px;
+  color: rgba(255,255,255,0.42);
+  background: rgba(255,255,255,0.03);
+  line-height: 1.7;
+}
+
+/* Skills */
+.fsc-skill-group { margin-bottom: 20px; }
+.fsc-skill-group-label {
+  font-family: 'VT323', monospace;
+  font-size: 10.5px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.25);
+  margin-bottom: 9px;
+  display: block;
+}
+.fsc-skill-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.fsc-skill-chip {
+  font-family: 'EB Garamond', serif;
+  font-size: 0.93rem;
+  color: #9aaebb;
+  background: rgba(255,255,255,0.045);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 3px;
+  padding: 2px 10px;
+  line-height: 1.55;
+}
+
+/* Project image */
+.fsc-proj-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  opacity: 0.88;
+  transition: opacity 0.2s;
+}
+.fsc-proj-card:hover .fsc-proj-img { opacity: 1; }
+
+/* Projects */
+.fsc-proj-card {
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 4px;
+  padding: 0;
+  margin-bottom: 12px;
+  background: rgba(255,255,255,0.025);
+  transition: all 0.2s;
+  overflow: hidden;
+}
+.fsc-proj-body { padding: 11px 15px 13px; }
+.fsc-proj-card:hover {
+  background: rgba(255,255,255,0.045);
+  border-color: rgba(70,140,207,0.3);
+}
+.fsc-proj-title {
+  font-family: 'EB Garamond', serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #ccdae4;
+  margin-bottom: 4px;
+}
+.fsc-proj-desc {
+  font-family: 'EB Garamond', serif;
+  font-size: 0.93rem;
+  color: #7a8e9a;
+  line-height: 1.58;
+  margin-bottom: 8px;
+}
+.fsc-proj-links { display: flex; gap: 8px; margin-top: 8px; }
+.fsc-proj-link {
+  font-family: 'VT323', monospace;
+  font-size: 13px;
+  color: #5a9fd4;
+  text-decoration: none;
+  border: 1px solid rgba(70,140,207,0.28);
+  padding: 1px 9px;
+  border-radius: 2px;
+  transition: all 0.14s;
+  line-height: 1.7;
+}
+.fsc-proj-link:hover { border-color: #5a9fd4; background: rgba(70,140,207,0.1); }
+
+/* Contact */
+.fsc-contact-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.055);
+}
+.fsc-contact-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.055);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+.fsc-contact-label {
+  font-family: 'VT323', monospace;
+  font-size: 9.5px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.22);
+}
+.fsc-contact-value {
+  font-family: 'EB Garamond', serif;
+  font-size: 1rem;
+  color: #9aaebb;
+}
+a.fsc-contact-link {
+  color: #5a9fd4;
+  text-decoration: none;
+}
+a.fsc-contact-link:hover { text-decoration: underline; }
+
+/* Buttons */
+.fsc-btn {
+  font-family: 'VT323', monospace;
+  font-size: 15px;
+  letter-spacing: 0.5px;
+  padding: 5px 18px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: transparent;
+  color: rgba(255,255,255,0.55);
+  cursor: pointer;
+  border-radius: 3px;
+  transition: all 0.14s;
+  text-decoration: none;
+  display: inline-block;
+  line-height: 1.6;
+}
+.fsc-btn:hover {
+  border-color: rgba(255,255,255,0.48);
+  color: rgba(255,255,255,0.88);
+  background: rgba(255,255,255,0.055);
+}
+.fsc-btn.primary {
+  background: rgba(255,255,255,0.055);
+  border-color: rgba(255,255,255,0.28);
+  color: rgba(255,255,255,0.65);
+}
+.fsc-btn.primary:hover {
+  border-color: rgba(255,255,255,0.55);
+  color: rgba(255,255,255,0.9);
+  background: rgba(255,255,255,0.1);
+}
+
+/* ══ Desk row (keyboard + mouse) ═════════════════════════════════ */
+.fsc-desk-row {
+  display: flex;
+  align-items: flex-end;
+  flex-shrink: 0;
+  background: linear-gradient(180deg, #E0DCCF 0%, #D2CEBC 100%);
+  border-top: 2px solid rgba(0,0,0,0.1);
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Keyboard side ───────────────────────────────────────────── */
+.fsc-kb-side {
+  flex: 1;
+  position: relative;
+  min-width: 0;
+}
+
+/* Coiled cable — absolutely positioned above keyboard, left-anchored */
+.fsc-kb-cable {
+  position: absolute;
+  left: 48px;
+  bottom: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 0;
+  pointer-events: none;
+}
+.fsc-cable-straight {
+  width: 7px;
+  height: 60px;
+  background: linear-gradient(to bottom, transparent 0%, #8a7f6f 40%);
+  border-radius: 4px;
+}
+
+/* ── Keyboard wrap — fills full width of its side ────────────── */
+.fsc-keyboard-wrap {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px 20px 16px 18px;
+}
+
+.fsc-kb-row {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 5px;
+  /* no justify-content — keys fill row via flex: 1 */
+}
+
+/* Keys fill available width — no max-width constraints */
+.fsc-key {
+  flex: 1;
+  min-width: 0;
+  height: 40px;
+  background: linear-gradient(170deg, #F0EDE0 0%, #E4E1D4 100%);
+  border-radius: 5px;
+  box-shadow: 0 5px 0 #B8B4A4, 0 6px 5px rgba(0,0,0,0.18);
+}
+.fsc-key.w15 { flex: 1.5; }
+.fsc-key.w2  { flex: 2; }
+.fsc-key.spc { flex: 5; }
+
+@keyframes fscKey {
+  0%,100% { transform: translateY(0);   box-shadow: 0 5px 0 #B8B4A4, 0 6px 5px rgba(0,0,0,0.18); }
+  50%      { transform: translateY(4px); box-shadow: 0 1px 0 #B8B4A4, 0 1px 2px rgba(0,0,0,0.06); }
+}
+.fsc-key:nth-child(3n+1) { animation: fscKey 1.6s infinite 0.15s; }
+.fsc-key:nth-child(7n)   { animation: fscKey 2.2s infinite 0.55s; }
+.fsc-key:nth-child(2n+4) { animation: fscKey 1.9s infinite 0.88s; }
+.fsc-key:nth-child(5n)   { animation: fscKey 2.6s infinite 1.25s; }
+.fsc-key:nth-child(4n+2) { animation: fscKey 1.3s infinite 0.05s; }
+
+/* ── Mouse side ──────────────────────────────────────────────── */
+.fsc-mouse-side {
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-end;
+  padding: 0 28px 16px 16px;
+  position: relative;
+}
+
+.fsc-mouse-assembly {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Mouse cable: absolutely positioned so it does NOT inflate desk row height */
+.fsc-mouse-cable {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+  z-index: 0;
+}
+.fsc-mouse-cable-straight {
+  width: 7px;
+  height: 60px;
+  background: linear-gradient(to bottom, transparent 0%, #8a7f6f 40%);
+  border-radius: 4px;
+}
+
+/* Mouse pad */
+.fsc-mousepad {
+  width: 190px;
+  height: 126px;
+  background: linear-gradient(140deg, #2e2b27 0%, #1c1a17 100%);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 6px 16px rgba(0,0,0,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.07),
+    inset 0 -2px 0 rgba(0,0,0,0.25);
+}
+
+/* Mouse body */
+.fsc-mouse {
+  width: 76px;
+  height: 100px;
+  background: linear-gradient(160deg, #E8E4D8 0%, #D4D1C6 50%, #C0BDB2 100%);
+  border-radius: 38px 38px 22px 22px;
+  position: relative;
+  box-shadow:
+    0 8px 16px rgba(0,0,0,0.25),
+    inset 3px 3px 6px rgba(255,255,255,0.6),
+    inset -2px -3px 6px rgba(0,0,0,0.14);
+}
+
+/* Decorative mouse: draggable */
+.fsc-mouse { cursor: grab; user-select: none; transition: transform 0.05s linear; }
+.fsc-mouse:active { cursor: grabbing; }
+
+/* Active state — green glow when virtual cursor is on */
+.fsc-mouse-active {
+  box-shadow:
+    0 8px 16px rgba(0,0,0,0.25),
+    inset 3px 3px 6px rgba(255,255,255,0.6),
+    inset -2px -3px 6px rgba(0,0,0,0.14),
+    0 0 14px rgba(40,200,80,0.55),
+    0 0 28px rgba(40,200,80,0.25);
+}
+
+/* Button seam */
+.fsc-mouse-seam {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 60px;
+  background: rgba(0,0,0,0.14);
+  border-radius: 1px;
+}
+
+/* Scroll wheel */
+.fsc-mouse-scroll {
+  position: absolute;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 10px;
+  height: 18px;
+  background: linear-gradient(180deg, #a09e94 0%, #7e7c72 100%);
+  border-radius: 5px;
+  box-shadow: inset 0 2px 3px rgba(0,0,0,0.35);
+}
+
+/* ── Responsive ──────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .fsc-desk-row      { display: none; }
+  .fsc-sidebar       { display: none; }
+  .fsc-mobile-tabs   { display: block; }
+  .fsc-body          { padding: 10px 12px 0; }
+  .fsc-bezel         { padding: 12px 12px 10px; border-radius: 12px 12px 4px 4px; }
+  .fsc-resume-btns   { display: none; }
+  .fsc-content-area  { padding: 14px 16px; }
+  .fsc-side-cable    { display: none; }
+}
