@@ -316,7 +316,8 @@ function ContactContent() {
       <div style={{ marginTop: "8px" }}>
         {[
           { icon: "✉", label: "Email", value: "Anshpachauri2005@gmail.com", href: "mailto:Anshpachauri2005@gmail.com" },
-          { icon: "📞", label: "Phone", value: "+1 614-493-9393", href: "tel:+16144939393" },
+          { icon: "📞", label: "Phone (US)", value: "+1 614-493-9393", href: "tel:+16144939393" },
+          { icon: "📞", label: "Phone (IN)", value: "+91 80769-66625", href: "tel:+918076966625" },
           { icon: "💼", label: "LinkedIn", value: "ansh-pachauri", href: "https://linkedin.com/in/ansh-pachauri" },
           { icon: "🐙", label: "GitHub", value: "anshpachauri23", href: "https://github.com/anshpachauri23" },
           { icon: "📍", label: "Location", value: "Columbus, OH", href: null },
