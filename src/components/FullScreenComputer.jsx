@@ -211,6 +211,15 @@ function SkillsContent() {
 function ProjectsContent() {
   const projects = [
     {
+      title: "Tech Asset & Service Management Portal",
+      period: "Spring 2026",
+      desc: "Internal business application for managing company technology assets and service requests. Features role-based approvals, Docker compose setup, and deployment to GCP Cloud Run.",
+      tags: ["Angular 17", "Java 21", "Spring Boot", "PostgreSQL", "Docker", "GCP"],
+      image: "/projects/project6.png",
+      demo: "https://tech-asset-portal-frontend-387813478263.us-central1.run.app/",
+      github: "https://github.com/anshpachauri23/Portfolio",
+    },
+    {
       title: "BuckeyeMeal Planner",
       period: "March 2026",
       desc: "2nd Place ($750) at the IBM SkillsBuild AI Hackathon. AI-powered platform integrating 7 OSU meal plans with real-time Nutrislice API data across 34 campus dining locations — serverless on IBM Cloud Code Engine with 200+ test cases.",
@@ -339,10 +348,10 @@ function ContactContent() {
       </div>
 
       <div style={{ marginTop: "22px", display: "flex", gap: "10px", flexWrap: "wrap" }}>
-        <a href="/Ansh_Pachauri_resume_US.pdf" download className="fsc-btn">
+        <a href="/Ansh_Pachauri_Resume_US.pdf" download className="fsc-btn">
           🇺🇸 US Résumé
         </a>
-        <a href="/Ansh_Pachauri_resume_IND.pdf" download className="fsc-btn">
+        <a href="/Ansh_Pachauri_Resume_IND.pdf" download className="fsc-btn">
           🇮🇳 India Résumé
         </a>
       </div>
@@ -538,10 +547,10 @@ export const FullScreenComputer = () => {
             <div className="fsc-logo-badge" />
             <span className="fsc-model-text">ANSH-PC 128K</span>
             <div className="fsc-resume-btns">
-              <a href="/Ansh_Pachauri_resume_US.pdf" download className="fsc-resume-btn">
+              <a href="/Ansh_Pachauri_Resume_US.pdf" download className="fsc-resume-btn">
                 🇺🇸 US Résumé
               </a>
-              <a href="/Ansh_Pachauri_resume_IND.pdf" download className="fsc-resume-btn">
+              <a href="/Ansh_Pachauri_Resume_IND.pdf" download className="fsc-resume-btn">
                 🇮🇳 India Résumé
               </a>
             </div>

@@ -3,6 +3,15 @@ import { ArrowRight, ExternalLink, Github, X } from "lucide-react";
 
 const projects = [
   {
+    id: 7,
+    title: "Tech Asset & Service Management Portal",
+    description: "Internal business application for managing company technology assets and service requests. Features role-based approvals, full Docker compose setup, and deployment to GCP Cloud Run.",
+    image: "/projects/project6.png",
+    tags: ["Angular 17", "Java 21", "Spring Boot", "PostgreSQL", "Docker", "GCP"],
+    demoUrl: "https://tech-asset-portal-frontend-387813478263.us-central1.run.app/",
+    githubUrl: "https://github.com/anshpachauri23/Portfolio",
+  },
+  {
     id: 1,
     title: "RecipeShare — Social Recipe Network",
     description: "Full-stack social media platform for recipe sharing with 15+ features: authentication, follow system, real-time notifications, commenting, and liking. Built with Go + PostgreSQL backend, JWT auth, AWS S3 for media, and Next.js frontend supporting 100+ concurrent users.",
